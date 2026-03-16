@@ -74,8 +74,16 @@ public class PrometeoEditor : Editor{
   private SerializedProperty turnRightButton;
   private SerializedProperty turnLeftButton;
   private SerializedProperty handbrakeButton;
+  //
+  //
+  //JOYSTICK CONTROLS VARIABLES
+  //
+  //
+  private SerializedProperty useJoystickControls;
+  private SerializedProperty joystickCircle;
+  private SerializedProperty joystickOuterCircle;
 
-  private void OnEnable(){
+    private void OnEnable(){
     prometeo = (PrometeoCarController)target;
     SO = new SerializedObject(target);
 
@@ -118,7 +126,11 @@ public class PrometeoEditor : Editor{
     turnLeftButton = SO.FindProperty("turnLeftButton");
     handbrakeButton = SO.FindProperty("handbrakeButton");
 
-  }
+    useJoystickControls = SO.FindProperty("useJoystickControls");
+    joystickCircle = SO.FindProperty("joystickCircle");
+    joystickOuterCircle = SO.FindProperty("joystickOuterCircle");
+
+    }
 
   public override void OnInspectorGUI(){
 
@@ -242,9 +254,27 @@ public class PrometeoEditor : Editor{
 
     EditorGUILayout.EndToggleGroup();
 
-    //END
+        //
+        //
+        //JOYSTICK CONTROLS
+        //
+        //
 
-    GUILayout.Space(10);
+        GUILayout.Space(25);
+        GUILayout.Label("JOYSTICK CONTROLS", EditorStyles.boldLabel);
+        GUILayout.Space(10);
+
+        useJoystickControls.boolValue = EditorGUILayout.BeginToggleGroup("Use joystick controls (mobile devices)?", useJoystickControls.boolValue);
+        GUILayout.Space(10);
+
+        EditorGUILayout.PropertyField(joystickCircle, new GUIContent("Joystick Circle: "));
+        EditorGUILayout.PropertyField(joystickOuterCircle, new GUIContent("Joystick Outer Circle: "));
+
+        EditorGUILayout.EndToggleGroup();
+
+        //END
+
+        GUILayout.Space(10);
     SO.ApplyModifiedProperties();
 
   }

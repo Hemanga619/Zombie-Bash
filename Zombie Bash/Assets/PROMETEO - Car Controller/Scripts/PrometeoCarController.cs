@@ -120,9 +120,26 @@ public class PrometeoCarController : MonoBehaviour
       public GameObject handbrakeButton;
       PrometeoTouchInput handbrakePTI;
 
+    [Space(20)]
+    //[Header("CONTROLS")]
+    [Space(10)]
+    //The following variables lets you to set up joysticks controls for mobile devices.
+    public bool useJoystickControls = false;
+    public Vector2 ptA;
+    public Vector2 ptB;
+    public Vector2 offset;
+    public Vector2 direction;
+    public Vector3 mousePos;
+    public bool isTouched = false;
+    public GameObject joystickCircle;
+    public GameObject joystickOuterCircle;
+    public Image joystickCircleImage;
+    public Image joystickOuterCircleImage;
+    public float joystickRadius = 10f;
+
     //CAR DATA
 
-      [HideInInspector]
+    [HideInInspector]
       public float carSpeed; // Used to store the speed of the car.
       [HideInInspector]
       public bool isDrifting; // Used to know whether the car is drifting or not.
@@ -163,7 +180,7 @@ public class PrometeoCarController : MonoBehaviour
         //gameObject. Also, we define the center of mass of the car with the Vector3 given
         //in the inspector.
         carRigidbody = gameObject.GetComponent<Rigidbody>();
-      carRigidbody.centerOfMass = bodyMassCenter;
+        carRigidbody.centerOfMass = bodyMassCenter;
 
       //Initial setup to calculate the drift value of the car. This part could look a bit
       //complicated, but do not be afraid, the only thing we're doing here is to save the default
@@ -258,10 +275,18 @@ public class PrometeoCarController : MonoBehaviour
           }
         }
 
+        if (useJoystickControls)
+        {
+            if (joystickCircle != null && joystickOuterCircle != null)
+            {
+                joystickCircleImage = joystickCircle.GetComponent<Image>();
+                joystickOuterCircleImage = joystickOuterCircle.GetComponent<Image>();
+            }
+        }
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         //CAR DATA
 
@@ -322,7 +347,81 @@ public class PrometeoCarController : MonoBehaviour
           ResetSteeringAngle();
         }
 
-      }else{
+      }
+      else if (useJoystickControls)
+      {
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                mousePos = Mouse.current.position.ReadValue();
+                //ptA = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Camera.main.transform.position.z));
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(joystickCircle.GetComponentInParent<RectTransform>(), mousePos, null, out ptA);
+                joystickCircle.GetComponent<RectTransform>().localPosition = ptA;
+                joystickOuterCircle.GetComponent<RectTransform>().localPosition = ptA;
+                joystickCircleImage.enabled = true;
+                joystickOuterCircleImage.enabled = true;
+            }
+
+            if (Mouse.current.leftButton.isPressed)
+            {
+                mousePos = Mouse.current.position.ReadValue();
+                isTouched = true;
+                //ptB = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Camera.main.transform.position.z));
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(joystickCircle.GetComponentInParent<RectTransform>(), mousePos, null, out ptB);
+            }
+            else
+            {
+                isTouched = false;
+                joystickCircleImage.enabled = false;
+                joystickOuterCircleImage.enabled = false;
+                joystickCircle.GetComponent<RectTransform>().localPosition = Vector2.zero;
+                joystickOuterCircle.GetComponent<RectTransform>().localPosition = Vector2.zero;
+            }
+
+            if (isTouched)
+            {
+                offset = ptB - ptA;
+                direction = Vector2.ClampMagnitude(offset, 1.0f);
+                Debug.Log(ptA);
+                Debug.Log(ptB);
+
+                if (direction.y > 0f)
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    GoForward();
+                }
+                if (direction.y < 0f)
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    GoReverse();
+                }
+
+                if (direction.x < 0f)
+                {
+                    TurnLeft();
+                }
+                if (direction.x > 0f)
+                {
+                    TurnRight();
+                }
+                if (direction.y > 0f)
+                {
+                    RecoverTraction();
+                }
+                if (Mathf.Abs(direction.y) < 0.001f)
+                {
+                    ThrottleOff();
+                }
+                if ((direction.x == 0f) && steeringAxis != 0f)
+                {
+                    ResetSteeringAngle();
+                }
+
+                joystickCircle.GetComponent<RectTransform>().localPosition = Vector2.ClampMagnitude(ptB, joystickRadius);
+            }
+        }
+      else{
 
         if(Keyboard.current.wKey.isPressed){
           CancelInvoke("DecelerateCar");

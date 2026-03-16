@@ -92,30 +92,8 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: a67006042548d954e9e630c46922dc39, type: 2}
-    m_RemovedComponents:
-    - {fileID: 1401139532381281685, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5319552418066578397}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
---- !u!1 &8245642477694327916 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
-  m_PrefabInstance: {fileID: 8639313024373657615}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5319552418066578397
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8245642477694327916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aed43332c01f8064b8c5136805e6cb79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KillOnCollision
-  spawnerObject: {fileID: 0}

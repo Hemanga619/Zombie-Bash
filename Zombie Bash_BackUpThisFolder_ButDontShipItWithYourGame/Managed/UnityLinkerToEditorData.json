@@ -499,7 +499,9 @@
           },
           {
             "name": "SpriteRenderer",
-            "scenes": [],
+            "scenes": [
+              "Assets/Game Folder/Scenes/SampleScene.unity"
+            ],
             "dependencyType": 0,
             "icon": null
           },

@@ -11,6 +11,7 @@ public class CarSpawner : MonoBehaviour
     private ZombieSpawner spawner;
     [SerializeField] private float time = 50f;
     [SerializeField] private Text timeText;
+    [SerializeField] private float timeIncrement = 1f ;
     [SerializeField] private Text fpsText;
     private float fpsTimer = 0f;
 
@@ -69,6 +70,7 @@ public class CarSpawner : MonoBehaviour
         if (collision.gameObject.CompareTag("Zombie"))
         {
             zombieObject = collision.gameObject;
+            time += timeIncrement;
             isDead = true;
             isGameStart = true;
         }

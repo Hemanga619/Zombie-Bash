@@ -9,11 +9,16 @@ public class SceneScript : MonoBehaviour
 
     private void Start()
     {
-        sceneScoreText.text = SceneScore.ToString();
+        if (sceneScoreText != null)
+        {
+            sceneScoreText.text = SceneScore.ToString();
+        }
     }
 
     public void PlayGame()
     {
+        SceneScore = 0;
+        ZombieSpawner.score = 0;
         SceneManager.LoadScene(1);
     }
 
